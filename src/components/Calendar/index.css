@@ -1,0 +1,118 @@
+.dc-calendar {
+  float: left;
+  width: 100%;
+}
+
+.dc-calendar * {
+  outline: none;
+}
+.dc-calendar button {
+  cursor: pointer;
+  color: white;
+  background: #007aff;
+  border: none;
+  border-radius: 3px;
+  padding: 7px 10px;
+  user-select: none;
+  font-weight: 200;
+  transition: all 0.3s;
+}
+.dc-calendar button:hover {
+  background: rgba(0, 122, 255, .8);
+}
+
+/* HEADER */
+.dc-header {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e8e8e8;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-content: stretch;
+  align-content: stretch;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+.dc-header-column {
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  -webkit-align-self: auto;
+  align-self: auto;
+}
+.dc-header-views button {
+  border-radius: 0;
+}
+.dc-header-views button:first-child {
+  border-radius: 3px 0 0 3px;
+}
+.dc-header-views button:last-child {
+  border-radius: 0 3px 3px 0;
+}
+.dc-header-title {
+  font-size: 20px;
+}
+.dc-header-title button {
+  margin: 0 10px;
+  color: #ff2d55;
+  background: transparent;
+  border: none;
+}
+.dc-header-title button:hover {
+  transform: scale(1.2);
+  background: transparent;
+}
+
+/* YEAR VIEW */
+.dc-view-year-month-title {
+  float: left;
+  width: 100%;
+  color: #ff2d55;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 13px;
+}
+.dc-view-year-month {
+  width: 33%;
+  float: left;
+  padding: 0 20px;
+  min-height: 210px;
+  box-sizing: border-box;
+}
+.dc-view-year-day {
+  float: left;
+  width: calc(100% / 7);
+  height: 25px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.dc-view-year-names .dc-view-year-day {
+  color: #ccc;
+}
+
+/* ADD EVENT POPUP */
+.dc-popup-wrap {
+  position: fixed;
+  background: rgba(0, 0, 0, .4);
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  top: 0;
+  left: 0;
+}
+.dc-popup {
+  background: #fff;
+  width: 400px;
+  margin: 100px auto auto;
+  padding: 20px;
+}
