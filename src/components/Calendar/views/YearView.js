@@ -6,7 +6,8 @@ import DayNameTitles from './../DayNameTitles.js'
 
 import { getDaysInMonth } from './../utils.js'
 
-class YearView extends React.PureComponent {
+
+export default class YearView extends React.PureComponent {
 
 	static propTypes = {
 		/**
@@ -126,5 +127,3 @@ class YearView extends React.PureComponent {
 		)
 	}
 }
-
-export default YearView

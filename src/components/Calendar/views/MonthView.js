@@ -7,7 +7,8 @@ import DayNameTitles from './../DayNameTitles.js'
 
 import { getDaysInMonth } from './../utils.js'
 
-class MonthView extends React.PureComponent {
+
+export default class MonthView extends React.PureComponent {
 
 	static propTypes = {
 		currentDate: PropTypes.string.isRequired,
@@ -69,5 +70,3 @@ class MonthView extends React.PureComponent {
 		)
 	}
 }
-
-export default MonthView

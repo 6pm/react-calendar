@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-class WeekEvents extends React.PureComponent {
+
+export default class WeekEvents extends React.PureComponent {
 
 	static propTypes = {
 		currentDate: PropTypes.string.isRequired,
@@ -103,5 +104,3 @@ class WeekEvents extends React.PureComponent {
 		)
 	}
 }
-
-export default WeekEvents

@@ -25,7 +25,7 @@ const initialFieldsState = {
 	},
 }
 
-class AddEvent extends React.PureComponent {
+export default class AddEvent extends React.PureComponent {
 
 	static propTypes = {
 		eventFormat: PropTypes.string.isRequired,
@@ -216,5 +216,3 @@ class AddEvent extends React.PureComponent {
 		)
 	}
 }
-
-export default AddEvent

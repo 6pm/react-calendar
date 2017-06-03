@@ -4,7 +4,8 @@ import moment from 'moment'
 
 import WeekEvents from './../WeekEvents'
 
-class WeekView extends React.PureComponent {
+
+export default class WeekView extends React.PureComponent {
 
 	static propTypes = {
 		currentDate: PropTypes.string.isRequired,
@@ -67,4 +68,3 @@ class WeekView extends React.PureComponent {
 	}
 }
 
-export default WeekView
