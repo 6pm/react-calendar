@@ -2,6 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
+import DayNameTitles from './../DayNameTitles.js'
+
+import { getDaysInMonth } from './../utils.js'
+
 class YearView extends React.PureComponent {
 
 	static propTypes = {
@@ -13,84 +17,91 @@ class YearView extends React.PureComponent {
 		view: PropTypes.string.isRequired,
 		currentDate: PropTypes.string.isRequired,
 		format: PropTypes.string.isRequired,
+		findEventsByDay: PropTypes.func.isRequired,
+		initializeEventPopup: PropTypes.func.isRequired,
 	}
 
-	static dayFormat = 'D M YYYY'
+	onYearEventClick = (e) => {
+		const { initializeEventPopup } = this.props
+		const eventId = e.target.getAttribute('data-id')
 
-  // componentDidMount = () => {
-    
-  //   console.log(daysInYear)
-  // }
+		initializeEventPopup(eventId)
+	}
 
-	getFirstDaysInMonths = () => {
+	getFirstDaysInMonths() {
 		const { currentDate, format } = this.props
 		const year = moment(currentDate, format).format('YYYY')
 		
-		return [...Array(12).keys()].map(month => moment([1, `${month + 1}`, year], YearView.dayFormat))
-	}
-
-	getDaysInMonth(firstDay) {
-		const monthAndYear = firstDay.format('M YYYY')
-		const offset = [...Array(firstDay.isoWeekday() - 1).keys()]
-		const days = [...Array(firstDay.daysInMonth()).keys()]
-		const dates = []
-		
-		// заповнити місяць офсетами - для відображення відступів в тижні
-		offset.forEach(i => dates.push(false))
-
-		// заповнити датами днів тижня
-		days.forEach(day => {
-			dates.push(`${day+1} ${monthAndYear}`)
-		})
-		
-		return dates
+		return [...Array(12).keys()].map(month => moment([1, `${month + 1}`, year], format))
 	}
 
 	getFullDates() {
-		const months = this.getFirstDaysInMonths() 
+		const months = this.getFirstDaysInMonths()
 		
-		return months.map(day => this.getDaysInMonth(day))
+		return months.map(day => getDaysInMonth(day))
 	}
 
 	// МЕТОДИ ДЛЯ РЕНДЕРУ ОКРЕМИХ ЕЛЕМЕНТІВ
 
 	renderDay(day, index) {
 		if (day) {
-			return <span
-				onClick={this.onDayClick}
-				data-day={day}
-				className="dc-view-year-day"
-				key={index}
-			>{day.split(' ')[0]}</span>
+			return (
+				<div
+					data-day={day}
+					className="dc-view-year-day"
+					key={index}
+				>
+					{day.split(' ')[0]}
+					{this.renderYearEvents(day)}
+				</div>
+			)
 		}
 		
-		return <span className="dc-view-year-day dc-empty" key={index}></span>
+		return <span className="dc-view-year-day dc-empty" key={index} />
 	}
 
-	renderMonthName(month) {
-		const lastDate = month[month.length - 1]
-		const momentDate = moment(lastDate, YearView.dayFormat)
+	renderYearEvents(day) {
+		const { findEventsByDay } = this.props
+		const events = findEventsByDay(day)
 
-		return momentDate.format('MMMM')
+		if(events.length) {
+			return (
+				<div className="dc-year-events-wrap">
+					<span className="dc-year-events-counter">
+						{events.length}
+					</span>
+					<div className="dc-year-events-container">
+						{events.map(event => (
+							<div key={event.id}>{this.renderEvent(event)}</div>
+						))}
+					</div>
+				</div>	
+			)
+		}
+
+		return null
 	}
 
-	renderWeekdayNames() {
-		const names = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-
+	renderEvent(event) {
 		return (
-			<div className="dc-view-year-names">
-				{names.map(name => (
-					<span className="dc-view-year-day" key={name}>{name}</span>
-				))}
-			</div>  
+			<span
+				className="dc-year-event"
+				onClick={this.onYearEventClick}
+				data-id={event.id}
+				title={`${event.title} - ${event.start}`}
+			>
+				<span role="img" aria-label="jsx-a11y/accessible-emoji" data-id={event.id}>{event.icon}</span>
+				{event.title}
+			</span>
 		)
 	}
 
-	// ОБРОБНИКИ ІВЕНТІВ
-	onDayClick = (e) => {
-		const day = e.target.getAttribute('data-day')
+	renderMonthName(month) {
+		const { format } = this.props
+		const lastDate = month[month.length - 1]
+		const momentDate = moment(lastDate, format)
 
-		console.log(day)
+		return momentDate.format('MMMM')
 	}
 
 	render() {
@@ -98,15 +109,19 @@ class YearView extends React.PureComponent {
 
 		return (
 			<div>
-				{months.map((month, key) => 
+				{months.map((month, key) => (
 					<div className="dc-view-year-month" key={key}>
-						<span className="dc-view-year-month-title">{this.renderMonthName(month)}</span>
+						<h2 className="dc-view-year-month-title">{this.renderMonthName(month)}</h2>
 						
-						{this.renderWeekdayNames()}
+						{DayNameTitles({
+							wrapperClass:'dc-view-year-names',
+							itemClass:'dc-view-year-day',
+						})}
 
 						{month.map((day, index) => this.renderDay(day, index))}
-					</div>)
-				}
+					</div>
+					)
+				)}
 			</div>
 		)
 	}
