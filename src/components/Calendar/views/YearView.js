@@ -10,11 +10,6 @@ import { getDaysInMonth } from './../utils.js'
 export default class YearView extends React.PureComponent {
 
 	static propTypes = {
-		/**
-		* The current date value of the calendar. Determines the visible view range
-		*
-		* @controllable onNavigate
-		*/
 		view: PropTypes.string.isRequired,
 		currentDate: PropTypes.string.isRequired,
 		format: PropTypes.string.isRequired,
@@ -22,6 +17,12 @@ export default class YearView extends React.PureComponent {
 		initializeEventPopup: PropTypes.func.isRequired,
 	}
 
+	/**
+	 * Обробник кліка по івенту року. Запускає функцію, 
+	 * яка ініціалізує попап для івенту.
+	 * 
+	 * @param {object} event - івент кліка
+	 */
 	onYearEventClick = (e) => {
 		const { initializeEventPopup } = this.props
 		const eventId = e.target.getAttribute('data-id')
@@ -29,6 +30,11 @@ export default class YearView extends React.PureComponent {
 		initializeEventPopup(eventId)
 	}
 
+	/**
+	 * Отримати всі перші дні місяців року
+	 * 
+	 * @returns {Array} - массив з датами перших днів 12 місяців
+	 */
 	getFirstDaysInMonths() {
 		const { currentDate, format } = this.props
 		const year = moment(currentDate, format).format('YYYY')
@@ -36,6 +42,11 @@ export default class YearView extends React.PureComponent {
 		return [...Array(12).keys()].map(month => moment([1, `${month + 1}`, year], format))
 	}
 
+	/**
+	 * Отримати всі дні, які є в році
+	 * 
+	 * @returns {Array} - массив з 365 чи 366(якщо високосний рік) елементами
+	 */
 	getFullDates() {
 		const months = this.getFirstDaysInMonths()
 		
@@ -44,6 +55,13 @@ export default class YearView extends React.PureComponent {
 
 	// МЕТОДИ ДЛЯ РЕНДЕРУ ОКРЕМИХ ЕЛЕМЕНТІВ
 
+	/**
+	 * Рендер 1 дня
+	 * 
+	 * @param {String} day - дата дня
+	 * @param {Number} index - індекс дня
+	 * @returns {JSX} - JSX-елемент
+	 */
 	renderDay(day, index) {
 		if (day) {
 			return (
@@ -61,6 +79,12 @@ export default class YearView extends React.PureComponent {
 		return <span className="dc-view-year-day dc-empty" key={index} />
 	}
 
+	/**
+	 * Рендер всіх івентів для одного дня
+	 * 
+	 * @param {String} day - дата дня
+	 * @returns {JSX} - JSX-елемент зі списком івентів, якщо вони існують
+	 */
 	renderYearEvents(day) {
 		const { findEventsByDay } = this.props
 		const events = findEventsByDay(day)
@@ -83,6 +107,12 @@ export default class YearView extends React.PureComponent {
 		return null
 	}
 
+	/**
+	 * Рендер одного івента 
+	 * 
+	 * @param {Object} event - обєкт івента
+	 * @returns {JSX} - JSX-елемент з івентом
+	 */
 	renderEvent(event) {
 		return (
 			<span
@@ -97,6 +127,12 @@ export default class YearView extends React.PureComponent {
 		)
 	}
 
+	/**
+	 * Отримати назву місяця по даті
+	 * 
+	 * @param {Object} month - дата
+	 * @returns {String} - назва місяця
+	 */
 	renderMonthName(month) {
 		const { format } = this.props
 		const lastDate = month[month.length - 1]
@@ -110,15 +146,18 @@ export default class YearView extends React.PureComponent {
 
 		return (
 			<div>
+				{/* рендер всіх місяців в році */}
 				{months.map((month, key) => (
 					<div className="dc-view-year-month" key={key}>
 						<h2 className="dc-view-year-month-title">{this.renderMonthName(month)}</h2>
-						
+
+						{/* функціональний компонент */}
 						{DayNameTitles({
 							wrapperClass:'dc-view-year-names',
 							itemClass:'dc-view-year-day',
 						})}
 
+						{/* рендер одного місяця */}
 						{month.map((day, index) => this.renderDay(day, index))}
 					</div>
 					)

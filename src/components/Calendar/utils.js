@@ -4,7 +4,7 @@
 	* то на початку массива буде 3 елемента зі значенням false.
 	* 
 	*
-	* firstDay(Moment object) - перший день місяця
+	* @param {Moment Object} firstDay - перший день місяця
 	*/
 export function getDaysInMonth(firstDay) {
 	const monthAndYear = firstDay.format('M YYYY')

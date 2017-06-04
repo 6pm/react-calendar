@@ -2,6 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
+/**
+	 * Заголовок з кнопками для управління календарем
+	 * 
+	 * @param {String} view - який вид календаря
+	 * @param {String} format - формат вибраної дати
+	 * @param {String} currentDate - дата, яка зараз вибрана
+	 * @param {Function} onTogglePopup - функція для відкриття/закриття попапу для івентів
+	 * @param {Function} onPressPrev - обробник нажаття кнопки "prev"
+	 * @param {Function} onPressNext - обробник нажаття кнопки "next"
+	 * @param {Function} onViewChange - зміна виду календаря
+	 */
 const Header = (props) => {
 	return (
 		<div className="dc-header">
@@ -27,11 +38,11 @@ const Header = (props) => {
 Header.propTypes = {
 	view: PropTypes.string.isRequired,
 	format: PropTypes.string.isRequired,
+	currentDate: PropTypes.string.isRequired,
 	onTogglePopup: PropTypes.func.isRequired,
 	onPressPrev: PropTypes.func.isRequired,
 	onPressNext: PropTypes.func.isRequired,
 	onViewChange: PropTypes.func.isRequired,
-	currentDate: PropTypes.string.isRequired,
 }
 
 export default Header

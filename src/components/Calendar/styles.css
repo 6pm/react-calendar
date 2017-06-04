@@ -29,7 +29,7 @@
   background: #ccc;
 }
 
-/* HEADER */
+/* ХЕДЕР */
 .dc-header {
   padding-bottom: 10px;
   display: -ms-flexbox;
@@ -79,7 +79,7 @@
   background: transparent;
 }
 
-/* YEAR VIEW */
+/* СТИЛІ ДЛЯ ВИГЛЯДУ НА РІК */
 .dc-view-year-month-title {
   float: left;
   width: 100%;
@@ -178,7 +178,7 @@
   left: auto;
 }
 
-/* MONTH VIEW */
+/* СТИЛІ ДЛЯ ВИГЛЯДУ НА МІСЯЦЬ */
 .dc-view-month-day {
   float: left;
   width: calc(100% / 7);
@@ -237,7 +237,7 @@
   border-color: transparent;
 }
 
-/* WEEK VIEW */
+/* СТИЛІ ДЛЯ ВИГЛЯДУ НА ТИЖДЕНЬ */
 .dc-week-timeline {
   width: 50px;
   float: left;

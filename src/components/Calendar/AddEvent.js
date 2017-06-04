@@ -53,6 +53,11 @@ export default class AddEvent extends React.PureComponent {
 		}
 	}
 
+	/**
+	 * Заповнити попап даними з існуючого івента і заповнити ними state
+	 * 
+	 * @param {Object} initData - дата
+	 */
 	setInitData(initData) {
 		this.setState({
 			title: {
@@ -76,6 +81,12 @@ export default class AddEvent extends React.PureComponent {
 		})
 	}
 
+	/**
+	 * Оновити одне поле і провалідувати. Для кожного поля є своя
+	 * валідація. В тих полях, які не обовязкові, просто міняється value
+	 * 
+	 * @param {Object} e - обєкт івента onChange
+	 */
 	updateField = (e) => {
 		const { eventFormat } = this.props
 		const value = e.target.value
@@ -123,12 +134,22 @@ export default class AddEvent extends React.PureComponent {
 		}
 	}
 
+	/**
+	 * Перевірити чи форма містить помилки. 
+	 * Всі філди повинні бути валідні(valid: true).
+	 * 
+	 * @returns {Boolean} - містить чи не містить форма помилки валідації
+	 */
 	formNotValid() {
 		const { title, start, duration } = this.state
 
 		return ![ title, start, duration ].every(input => input.valid)
 	}
 
+	/**
+	 * Відправити форму з івентом. Дані попапа передаються в компонент вище
+	 * і закривається попап
+	 */
 	submitForm() {
 		const { onSubmitEvent, onTogglePopup } = this.props
 		const data = this.prepareFormData()
@@ -137,6 +158,12 @@ export default class AddEvent extends React.PureComponent {
 		onTogglePopup()
 	}
 
+	/**
+	 * Відформатувати івент в такий формат, в якому він зберігається в головному компоненті.
+	 * При редагуванні чи створенні івент доаповнюється іншими даними, наприклад валідацією.
+	 * 
+	 * @returns {Object} - новий обєкт івента
+	 */
 	prepareFormData() {
 		const { title, icon, start, duration, id } = this.state
 		const data = {
@@ -151,7 +178,6 @@ export default class AddEvent extends React.PureComponent {
 		}
 
 		return data
-
 	}
 
 	render() {
@@ -171,6 +197,7 @@ export default class AddEvent extends React.PureComponent {
 					
 					<h2 className="dc-popup-title">Create event</h2>
 
+					{/* поле для зміни title */}
 					<div className="dc-popup-row">
 						<label className="dc-popup-row-name" htmlFor="dc-popup-title">Title</label>
 						<div className="dc-popup-row-value">
@@ -181,6 +208,7 @@ export default class AddEvent extends React.PureComponent {
 						</div>
 					</div>
 
+					{/* поле для зміни іконки */}
 					<div className="dc-popup-row">
 						<label className="dc-popup-row-name" htmlFor="dc-popup-icon">Icon</label>
 						<div className="dc-popup-row-value">
@@ -189,6 +217,7 @@ export default class AddEvent extends React.PureComponent {
 						</div>
 					</div>
 
+					{/* поле для зміни початкової дати івента */}
 					<div className="dc-popup-row">
 						<label className="dc-popup-row-name" htmlFor="dc-popup-start">Start date</label>
 						<div className="dc-popup-row-value">
@@ -199,6 +228,7 @@ export default class AddEvent extends React.PureComponent {
 						</div>
 					</div>
 
+					{/* поле для зміни тривалості івента */}
 					<div className="dc-popup-row">
 						<label className="dc-popup-row-name" htmlFor="dc-popup-duration">Duration</label>
 						<div className="dc-popup-row-value">

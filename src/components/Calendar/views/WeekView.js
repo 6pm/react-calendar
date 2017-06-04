@@ -24,6 +24,12 @@ export default class WeekView extends React.PureComponent {
 		this.fixStartOfWeek()
 	}
 
+	/**
+	 * Поставити currentDate найближчим минулим понеділком.
+	 * Параметр currentDate може не початком тижня, а іншим днем, наприклад середою.
+	 * Так як всі відображення календаря починається з понеділка,
+	 * то currentDate встановлюється понеділком.
+	 */
 	fixStartOfWeek() {
 		const { currentDate, format, setDate } = this.props
 		const firstDayOfWeek = moment(currentDate, format).startOf('isoweek').format('D M YYYY')
@@ -54,6 +60,7 @@ export default class WeekView extends React.PureComponent {
 					))}
 				</div>
 
+				{/* рендер івентів */}
 				<WeekEvents
 					currentDate={currentDate}
 					format={format}

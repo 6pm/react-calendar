@@ -12,7 +12,12 @@ import YearView from './views/YearView'
 
 import './styles.css'
 
-
+/**
+	 * Головний компонент календаря. Дані зберігаються схожим шляхом як і в redux.
+	 * Всі дані зберігаються всередині в state,
+	 * і в інші компоненти передаються функції, які дозволяють міняти state.
+	 * В localStorage синхронізуються всі дані, крім стану папапу
+	 */
 export default class Calendar extends React.PureComponent {
 
 	static propTypes = {
@@ -21,7 +26,9 @@ export default class Calendar extends React.PureComponent {
 		currentDate: PropTypes.string,
 	}
 
+	// формат дати яка вибрана на даний момент
 	static format = 'D M YYYY'
+	// формат дати івента
 	static eventFormat = 'D.M.YYYY H:m'
 
 	constructor(props) {
@@ -31,11 +38,15 @@ export default class Calendar extends React.PureComponent {
 	}
 
 	state = {
+		// тут зберігаються всі івенти
 		events: [],
 		// відображення календаря. Може бути - 'week, month, year'
 		view: 'week',
+		// дата, яка вибрана на даний момент
 		currentDate: '29 5 2017',
+		// відкритий чи закритий попап для створення/редагування івентів. Не синхронізується з localStorage
 		addEventPopup: false,
+		// дані для ініціалізації попапа. Не синхронізується з localStorage
 		popupInitData: false
 	}
   
@@ -63,18 +74,35 @@ export default class Calendar extends React.PureComponent {
 		}
 	}
 
+	/**
+	 *  Знайти всі івенти на певний день
+	 * 
+	 * @param {String} day - день, на який треба знайти івенти
+	 * @returns {Array} - івенти дня
+	 */
 	findEventsByDay = (day) => {
 		const { events } = this.state
 
 		return events.filter(e => moment(e.start, Calendar.eventFormat).format(Calendar.format) === day)
 	}
 
+	/**
+	 *  Знайти івент по id
+	 * 
+	 * @param {String} id - id івента
+	 */
 	findEventById = (id) => {
 		const { events } = this.state
 
 		return events.find(item => item.id === id)
 	}
 
+	/**
+	 *  Переключити вигляд(view) календаря
+	 * 
+	 * @param {String} viewName - новий вигляд
+	 * @returns {JSX} - компонент вигляду
+	 */
 	getView(viewName) {
 		switch(viewName) {
 		case 'week': return WeekView
@@ -84,10 +112,20 @@ export default class Calendar extends React.PureComponent {
 		}
 	}
 
+	/**
+	 *  Замінити дату
+	 * 
+	 * @param {String} date - нова дата
+	 */
 	setDate = (date) => {
 		this.setState({ currentDate: date })
 	}
 
+	/**
+	 *  Згенерувати унікальний id
+	 * 
+	 * @returns {String} - id
+	 */
 	generateId() {
 		const letters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 		const length = 6
@@ -100,6 +138,11 @@ export default class Calendar extends React.PureComponent {
 		return id
 	}
 
+	/**
+	 * Добавити новий івент до існуючих івентів
+	 * 
+	 * @param {Object} data - дані івента
+	 */
 	addEvent(data) {
 		const { events } = this.state
 		const id = this.generateId()
@@ -108,6 +151,11 @@ export default class Calendar extends React.PureComponent {
 		this.setState({ events: events.concat([ newEvent ]) })
 	}
 
+	/**
+	 *  Оновити існуючий івент
+	 * 
+	 * @param {Object} data - день, на який треба знайти івенти
+	 */
 	updateEvent(data) {
 		const { events } = this.state
 		const withoutEdited = events.concat([]).filter(item => item.id !== data.id)
@@ -115,6 +163,11 @@ export default class Calendar extends React.PureComponent {
 		this.setState({ events: withoutEdited.concat([ data]) })
 	}
 
+	/**
+	 *  Ініціалізувати попап для редагування івентa
+	 * 
+	 * @param {String} id - id івента, який буде редагуватись
+	 */
 	initializeEventPopup = (id) => {
 		const editedEvent = this.findEventById(id)
 
@@ -126,10 +179,18 @@ export default class Calendar extends React.PureComponent {
 	// ОБРОБНИКИ ІВЕНТІВ
 	// ---------------------------------
 
-	onViewChange(e, value) {
+	/**
+	 *  Змінити view на новий
+	 * 
+	 * @param {Object} e - обєкт івента кліка
+	 */
+	onViewChange(e) {
 		this.setState({ view: e.target.getAttribute('data-value') })
 	}
 
+	/**
+	 *  Переключити на наступний тиждень/місяць/рік
+	 */
 	onPressPrev = () => {
 		const { view, currentDate } = this.state
 		const prevDate = moment(currentDate, Calendar.format).subtract(1, view).format(Calendar.format)
@@ -137,6 +198,9 @@ export default class Calendar extends React.PureComponent {
 		this.setState({ currentDate: prevDate })
 	}
 
+	/**
+	 *  Переключити на минулий тиждень/місяць/рік
+	 */
 	onPressNext = () => {
 		const { view, currentDate } = this.state
 		const nextDate = moment(currentDate, Calendar.format).add(1, view).format(Calendar.format)
@@ -144,6 +208,9 @@ export default class Calendar extends React.PureComponent {
 		this.setState({ currentDate: nextDate })
 	}
 
+	/**
+	 *  Відкрити/закрити попап для івентів
+	 */
 	onTogglePopup = () => {
 		const { addEventPopup } = this.state
 		const newValue = !addEventPopup
@@ -155,21 +222,30 @@ export default class Calendar extends React.PureComponent {
 		if(!newValue) this.clearInitPopupData()
 	}
 
+	/**
+	 *  Очистити дані з попереднього редагування івента
+	 */
 	clearInitPopupData = () => {
 		this.setState({ popupInitData: false })
 	}
 
+	/**
+	 *  Добавити івент. Якщо data має id - значить івент редагувався, якщо ні - створити новий івент
+	 * 
+	 * @param {Object} data - дані з івентом
+	 */
 	onSubmitEvent = (data) => {
 		data.id ? this.updateEvent(data) : this.addEvent(data)
 	}
 
 	render() {
 		const { popupInitData, view, currentDate, addEventPopup, events } = this.state
-
 		const CurrentView = this.getView(view)
 
 		return (
 			<div className="dc-calendar">
+				
+				{/* функціональний компонент з хедером */}
 				{Header({
 					view: view,
 					currentDate: currentDate,
@@ -180,6 +256,7 @@ export default class Calendar extends React.PureComponent {
 					onTogglePopup: this.onTogglePopup,
 				})}
 
+				{/* сам календар, в залежності від вибраного view */}
 				<CurrentView
 					view={view}
 					events={events}
@@ -191,7 +268,7 @@ export default class Calendar extends React.PureComponent {
 					initializeEventPopup={this.initializeEventPopup}
 				/>
 
-				
+				{/*  попап для створення/редагування івентів */}
 				{addEventPopup && (
 					<AddEvent
 						onTogglePopup={this.onTogglePopup}

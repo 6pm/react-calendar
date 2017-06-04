@@ -34,6 +34,9 @@ export default class WeekEvents extends React.PureComponent {
 		window.removeEventListener('resize', this.updateContainerWidth)
 	}
 
+	/**
+	 * Оновити ширину контейнера і зберігти це значення в state
+	 */
 	updateContainerWidth() {
 		const { weekEventsContainer } = this.refs
 		const daysInWeek = 7
@@ -42,6 +45,11 @@ export default class WeekEvents extends React.PureComponent {
 		this.setState({ containerWidth: dayWidth })
 	}
 
+	/**
+	 * Клік по івенту тижня. Відкрити попап і закинути в нього дані з вибраним івентом
+	 * 
+	 * @param {Object} e - дані івента
+	 */
 	onWeekEventClick = (e) => {
 		const { initializeEventPopup } = this.props
 		const eventId = e.target.getAttribute('data-id')
@@ -49,6 +57,12 @@ export default class WeekEvents extends React.PureComponent {
 		initializeEventPopup(eventId)
 	}
 
+	/**
+	 * Отримати відступ зліва для івента. Вираховується в залежності від дня тижня
+	 * 
+	 * @param {String} startDate - дата початку івента
+	 * @returns {Number} - кількість пікселів зліва
+	 */
 	getLeftOffset = (startDate) => {
 		const { currentDate, format } = this.props
 		const { containerWidth } = this.state
@@ -61,6 +75,12 @@ export default class WeekEvents extends React.PureComponent {
 		return dayOffset * containerWidth
 	}
 
+	/**
+	 * Отримати відступ зверху для івента. Вираховується в залежності від години початку івента
+	 * 
+	 * @param {String} startDate - дата початку івента
+	 * @returns {Number} - кількість пікселів зверху
+	 */
 	getTopOffset = (startDate) => {
 		const { eventFormat, hourHeight } = this.props
 		const hours = moment(startDate, eventFormat).hours()
@@ -78,10 +98,12 @@ export default class WeekEvents extends React.PureComponent {
 
 		return (
 			<div className="dc-week-events" ref={'weekEventsContainer'}>
+				{/* бекграунд з годинами */}
 				{[...Array(daysInWeek * hoursInDay)].map((x, index) => (
 					<span className="dc-week-hour" key={index} />
 				))}
 
+				{/* рендер всіх івентів тижня */}
 				{events.map(event => (
 					<div 
 						className="dc-week-event"
